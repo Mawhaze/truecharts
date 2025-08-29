@@ -19,9 +19,7 @@ workload:
             - --no-autoupdate
             - run
           env:
-            TUNNEL_TOKEN: 
-              value: ""
-              valueFrom: {}
+            TUNNEL_TOKEN: ""
 service:
   main:
     enabled: false
