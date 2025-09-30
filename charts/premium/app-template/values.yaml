@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/linuxserver/jackett
   pullPolicy: IfNotPresent
-  tag: 0.22.2390@sha256:81a93f08460835219493d63f245909290239042b715da3e5f203afc83689c811
+  tag: 0.24.7@sha256:8a0ddaf8b098cb6a87d6e4fc9f77783232199790ed4d67c4022a0890a291ecc5
 
 workload:
   main:
@@ -15,3 +15,10 @@ workload:
               type: tcp
             startup:
               type: tcp
+
+redis:
+  enabled: false
+mariadb:
+  enabled: false
+mongodb:
+  enabled: false

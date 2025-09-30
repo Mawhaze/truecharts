@@ -1,6 +1,6 @@
 image:
   repository: public.ecr.aws/docker/library/xwiki
-  tag: 17.7.0-postgres-tomcat@sha256:e9151b905d9e35cdbeb319230b5a8d429313cf023e0cb24fe4a4020451e4c9d3
+  tag: 17.7.0-postgres-tomcat@sha256:9c4e65e14143ebebf9d30cce1a1b053189b8bec4e59aae0b4314fdfa7cd8e1be
   pullPolicy: IfNotPresent
 service:
   main:

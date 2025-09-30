@@ -1,11 +1,11 @@
 image:
   repository: ghcr.io/home-operations/emby
   pullPolicy: IfNotPresent
-  tag: 4.8.11.0@sha256:48cd01b20e49548aee694fcdeff273fc623f0ac83c31ac99d55d31c22b2177a6
+  tag: 4.9.1.36@sha256:5c8dc62014deda173f95b9c4dcb6ba523558a8f77d34755abf1a7a75e6fddb2c
 broadcastProxyImage:
   repository: docker.io/alpine/socat
   pullPolicy: IfNotPresent
-  tag: 1.8.0.3@sha256:fe469fd30a68365e2a0f0ccee6c170cc56ee703b19c9d1489ecac89639cc095d
+  tag: 1.8.0.3@sha256:8dba533d16432d178f8476b3d7b20751fbdbeb8f50adcd547dee6bd5a7067a89
 service:
   main:
     ports:

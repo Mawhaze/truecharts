@@ -1,7 +1,7 @@
 image:
   repository: docker.io/slechev/openwebrxplus-softmbe
   pullPolicy: IfNotPresent
-  tag: 1.2.91@sha256:9ece2b746e99ff0b5d2fb3e6c25b4abefcb868b85db8c6a24f952bb4df9275b8
+  tag: 1.2.93@sha256:0754668e7e1809bd85bb8451d7b08c9db15cdf2de9b4e6b454e6421c67669947
 workload:
   main:
     podSpec:

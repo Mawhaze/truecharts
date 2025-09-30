@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/rommapp/romm
   pullPolicy: IfNotPresent
-  tag: 4.1@sha256:2e9cd221a9cefe093c327258e148b762b0e5491ff72f6f79fbe9fc336852654c
+  tag: 4.3@sha256:a492592dad85b7d9bae9fca9ac958eb04492e383002abbd3566a7efb3b251091
 
 securityContext:
   container:

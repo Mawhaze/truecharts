@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/home-operations/jackett
   pullPolicy: IfNotPresent
-  tag: 0.22.2390@sha256:1dadb29e53d623bf9d537985cc8fc4408b1d2f3a975abb47c9e7ee126b819da8
+  tag: 0.24.7@sha256:feadec06b1aac2081d3106d80c2261000a57b9f9ee39b3b1a92340926239b042
 service:
   main:
     ports:

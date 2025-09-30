@@ -1,7 +1,7 @@
 image:
   repository: docker.io/clamav/clamav
   pullPolicy: IfNotPresent
-  tag: 1.4.3@sha256:87500487923451647e67fa6d099b80509e57e6be1cd44e6a7490a2a4bf363f0a
+  tag: 1.4.3@sha256:7f9545ed5b5e7dfc0b0c438bd970146485bbc06c992b3a3616089e0821fb4774
 securityContext:
   container:
     readOnlyRootFilesystem: false

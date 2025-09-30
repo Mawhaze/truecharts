@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/mend/renovate-ce
   pullPolicy: IfNotPresent
-  tag: 11.2.0@sha256:3c30b6c287476cd3be82c5078826ce41d5676778caf97019ba17cc5d842be5b4
+  tag: 11.4.0@sha256:5a58a33a89135c63565f4c53ec170677129d3cc898f052123adc80fe98912c6c
 workload:
   main:
     podSpec:
