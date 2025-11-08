@@ -1,7 +1,7 @@
 image:
   pullPolicy: IfNotPresent
   repository: docker.io/cloudreve/cloudreve
-  tag: 4.8.0@sha256:a553e5138ffc039388a0b45124189d0dec08f0c9b90d57469dc6240df9bfa452
+  tag: 4.9.2@sha256:14861f3123cd637ef5d02592005a1f5ad98f291d560d41ed1879ef7e94512978
 workload:
   main:
     podSpec:

@@ -1,7 +1,7 @@
 image:
-  repository: ghcr.io/home-operations/jackett
+  repository: oci.trueforge.org/containerforge/jackett
   pullPolicy: IfNotPresent
-  tag: 0.24.7@sha256:feadec06b1aac2081d3106d80c2261000a57b9f9ee39b3b1a92340926239b042
+  tag: 0.24.255
 service:
   main:
     ports:

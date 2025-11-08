@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/squat/generic-device-plugin
   pullPolicy: IfNotPresent
-  tag: latest@sha256:359bcdd5c7b45a815a50e2f69c5942d85de6db03ff4a3923462af06161bead08
+  tag: latest@sha256:0cf725e91c3eb2ea095e8d825f290b9de5dc97110c82d0e92a76bf94618a8f50
 
 workload:
   main:

@@ -1,7 +1,7 @@
 image:
   repository: docker.io/clamav/clamav
   pullPolicy: IfNotPresent
-  tag: 1.4.3@sha256:7f9545ed5b5e7dfc0b0c438bd970146485bbc06c992b3a3616089e0821fb4774
+  tag: 1.5.1@sha256:a56287b4ffa299bde2ef09234cb8b6134d591d0be05b63f5065932dc93cb2435
 securityContext:
   container:
     readOnlyRootFilesystem: false
@@ -26,7 +26,7 @@ service:
         protocol: http
         targetPort: 3310
   milter:
-    enabled: true
+    enabled: false
     ports:
       milter:
         enabled: true
@@ -61,7 +61,7 @@ workload:
           env:
             CLAMAV_NO_CLAMD: false
             CLAMAV_NO_FRESHCLAMD: false
-            CLAMAV_NO_MILTERD: true
+            CLAMAV_NO_MILTERD: "{{ not .Values.service.milter.enabled }}"
             CLAMD_STARTUP_TIMEOUT: 1800
             FRESHCLAM_CHECKS: 1
 persistence:

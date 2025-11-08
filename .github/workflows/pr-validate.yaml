@@ -10,7 +10,8 @@ concurrency:
 jobs:
   pr-changes:
     name: Collect PR changes
-    runs-on: ubuntu-latest
+    runs-on:
+      group: default
     outputs:
       addedOrModified: ${{ steps.collect-changes.outputs.changesDetected }}
       addedOrModifiedFiles: ${{ steps.collect-changes.outputs.addedOrModifiedFiles }}
@@ -23,14 +24,8 @@ jobs:
         id: collect-changes
         uses: ./.github/actions/collect-changes
 
-  containers-build:
-    uses: ./.github/workflows/containers.build.yaml
-
   common-tests:
     uses: ./.github/workflows/common-tests.yaml
-
-  clustertool-tests:
-    uses: ./.github/workflows/clustertool.tests.yaml
 
   charts-lint:
     uses: ./.github/workflows/charts-lint.yaml
@@ -57,7 +52,8 @@ jobs:
 
   print_head_msg:
     name: Print commit message
-    runs-on: ubuntu-latest
+    runs-on:
+      group: default
     outputs:
       head-commit-message: ${{ steps.get_head_commit_message.outputs.headCommitMsg }}
       pr-title: ${{ github.event.pull_request.title }}
@@ -77,14 +73,13 @@ jobs:
 
   finished:
     name: Finished PR Tests
-    runs-on: ubuntu-latest
+    runs-on:
+      group: default
     if: always()
     needs:
       - pr-changes
-      - containers-build
       - charts-lint
       - charts-test
-      - clustertool-tests
       - website-and-docs
       - print_head_msg
       - common-tests
@@ -92,9 +87,7 @@ jobs:
       - name: Check Results
         run: |
           if [[ "${{ needs.pr-changes.result }}" != "success" || \
-                "${{ needs.containers-build.result }}" != "success" || \
                 "${{ needs.charts-lint.result }}" != "success" || \
-                "${{ needs.clustertool-tests.result }}" != "success" || \
                 "${{ needs.charts-test.result }}" != "success" || \
                 "${{ needs.website-and-docs.result }}" != "success" || \
                 "${{ needs.common-tests.result }}" != "success" || \

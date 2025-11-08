@@ -1,7 +1,7 @@
 image:
   repository: public.ecr.aws/docker/library/odoo
   pullPolicy: IfNotPresent
-  tag: 19.0@sha256:67a6c4fc312186720be9566071eb3539634925657b4e2e3d799bc5608d838851
+  tag: 19.0@sha256:28457d4c74b2861a56feb38fe7a74107110a66af7627bbec54099a1f5deeede0
 securityContext:
   container:
     readOnlyRootFilesystem: false

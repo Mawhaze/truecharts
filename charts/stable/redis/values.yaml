@@ -1,7 +1,7 @@
 image:
   repository: docker.io/bitnamisecure/redis
   pullPolicy: IfNotPresent
-  tag: latest@sha256:6705bb72c6d6e5f27ac4771a6d695ed567a8148fe990eb982779215b74716c72
+  tag: latest@sha256:8f83c7563c478b04219d7d06e5eba1b7ccba13f332f31a83a200a0908748e54a
 
 workload:
   main:

@@ -1,7 +1,7 @@
 image:
   repository: ghcr.io/linuxserver/openvscode-server
   pullPolicy: IfNotPresent
-  tag: 1.103.1@sha256:bd6ff3bba20e76053570dee217a06c3c9eff12da139d993a80359cbfc3c954ca
+  tag: 1.105.1@sha256:120a219f6bf9078102b8d270d0b1818ca7b1f9659fc935bde191ef344be6e5f2
 # secretEnv:
 #   CONNECTION_TOKEN: "somerandomstring"
 #   CONNECTION_SECRET: ""

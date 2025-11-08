@@ -11,10 +11,10 @@ annotations:
   truecharts.org/min_kubernetes_version: 1.24.0
   truecharts.org/train: stable
 apiVersion: v2
-appVersion: 2.2.0
+appVersion: 2.3.0
 dependencies:
   - name: common
-    version: 28.21.1
+    version: 28.26.3
     repository: oci://oci.trueforge.org/truecharts
     condition: ""
     alias: ""
@@ -40,8 +40,7 @@ sources:
   - https://ghcr.io/enchant97/hasty-paste
   - https://github.com/enchant97/hasty-paste
   - https://github.com/enchant97/hasty-paste/blob/main/docs/install.md
-  - https://github.com/truecharts/charts/tree/master/charts/stable/hasty-paste
   - https://github.com/trueforge-org/truecharts/tree/master/charts/stable/hasty-paste
 type: application
-version: 10.8.1
+version: 10.13.3
 

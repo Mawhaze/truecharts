@@ -1,26 +1,26 @@
 image:
   repository: ghcr.io/immich-app/immich-server
-  tag: v1.143.1@sha256:a5935f03b93137952c38b14a47148525023f4c36a2db174d8266a9d3b37e7e3b
+  tag: v2.2.3@sha256:4504d794123c3f5410cc45bbc61e4d7dbcacec1e1b0cd2e599691430c94e5849
   pullPolicy: IfNotPresent
 
 mlImage:
   repository: ghcr.io/immich-app/immich-machine-learning
-  tag: v1.143.1@sha256:cc94659771d7e394d6406ebb0664069f2523062fda4f934def31648e903c4de2
+  tag: v2.2.3@sha256:bf339cbb44af6c2ef25d9128e1da51b2bec0cfd524846a83e3017c21bd71ddb4
   pullPolicy: IfNotPresent
 
 mlCudaImage:
   repository: ghcr.io/immich-app/immich-machine-learning
-  tag: v1.143.1-cuda@sha256:ed264be211c932b859dcb92076911d672a32a6b610b2436e0940be6680d67728
+  tag: v2.2.3-cuda@sha256:39e2be8467bc05f03563af9cff5eafa2da0bf648fdaa9b91493a49830a879599
   pullPolicy: IfNotPresent
 
 mlOpenvinoImage:
   repository: ghcr.io/immich-app/immich-machine-learning
-  tag: v1.143.1-openvino@sha256:3b02d7b2d3157f5910d74e1f9868804153925b5fd45025ee911a6c6c9f0a46db
+  tag: v2.2.3-openvino@sha256:b9429116a442b3a887f3fe77b7d938d7239764065ce70eb65a7ac3620baa4d5b
   pullPolicy: IfNotPresent
 
 mlRocmImage:
   repository: ghcr.io/immich-app/immich-machine-learning
-  tag: v1.143.1-rocm@sha256:27294752e58d9a045a7f12c82d178e72238e218c4fb9d86788568c85c5680330
+  tag: v2.2.3-rocm@sha256:4160fd7a090fe47da8334130d6401df63e79ed4dc71afc9e554cdffe982789c8
   pullPolicy: IfNotPresent
 
 securityContext:
@@ -33,8 +33,159 @@ securityContext:
 immich:
   enable_ml: true
   mlImageType: mlImage
-  log_level: log
 
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          imageSelector: image
+          resources:
+            excludeExtra: true
+          securityContext:
+            capabilities:
+              disableS6Caps: true
+          env:
+            IMMICH_MACHINE_LEARNING_ENABLED: "{{ .Values.immich.enable_ml }}"
+            IMMICH_MACHINE_LEARNING_URL: >-
+              {{- if .Values.immich.enable_ml -}}
+                {{- printf "http://%s-machinelearning:%v" (include "tc.v1.common.lib.chart.names.fullname" .) .Values.service.machinelearning.ports.machinelearning.port -}}
+              {{- else -}}
+                false
+              {{- end -}}
+            IMMICH_PORT: "{{ .Values.service.main.ports.main.port }}"
+            IMMICH_WORKERS_INCLUDE: api
+            NODE_ENV: production
+            DB_USERNAME: "{{ .Values.cnpg.main.user }}"
+            DB_DATABASE_NAME: "{{ .Values.cnpg.main.database }}"
+            DB_HOSTNAME: "{{ .Values.cnpg.main.creds.host }}"
+            DB_PASSWORD: "{{ .Values.cnpg.main.creds.password }}"
+            DB_PORT: "5432"
+            REDIS_HOSTNAME: '{{ .Values.redis.creds.plainhost | trimAll "\"" }}'
+            REDIS_PASSWORD: '{{ .Values.redis.creds.redisPassword | trimAll "\"" }}'
+            REDIS_PORT: "6379"
+            REDIS_DBINDEX: "0"
+          probes:
+            readiness:
+              enabled: true
+              type: http
+              path: /api/server/ping
+              port: "{{ .Values.service.main.ports.main.port }}"
+            liveness:
+              enabled: true
+              type: http
+              path: /api/server/ping
+              port: "{{ .Values.service.main.ports.main.port }}"
+            startup:
+              enabled: true
+              type: http
+              path: /api/server/ping
+              port: "{{ .Values.service.main.ports.main.port }}"
+  machinelearning:
+    enabled: "{{ .Values.immich.enable_ml }}"
+    type: Deployment
+    podSpec:
+      initContainers:
+        wait-server:
+          enabled: true
+          type: init
+          imageSelector: alpineImage
+          resources:
+            excludeExtra: true
+          command:
+            - /bin/ash
+            - -c
+            - |
+              {{- tpl .Values.waitServerScript $ -}}
+      containers:
+        machinelearning:
+          enabled: true
+          primary: true
+          imageSelector: "{{ .Values.immich.mlImageType }}"
+          resources:
+            excludeExtra: true
+          securityContext:
+            capabilities:
+              disableS6Caps: true
+          env:
+            NODE_ENV: production
+            IMMICH_PORT: "{{ .Values.service.machinelearning.ports.machinelearning.port }}"
+            MACHINE_LEARNING_CACHE_FOLDER: "{{ .Values.persistence.mlcache.targetSelector.machinelearning.machinelearning.mountPath }}"
+            TRANSFORMERS_CACHE: "{{ .Values.persistence.mlcache.targetSelector.machinelearning.machinelearning.mountPath }}"
+          probes:
+            readiness:
+              enabled: true
+              type: http
+              path: /ping
+              port: "{{ .Values.service.machinelearning.ports.machinelearning.port }}"
+            liveness:
+              enabled: true
+              type: http
+              path: /ping
+              port: "{{ .Values.service.machinelearning.ports.machinelearning.port }}"
+            startup:
+              enabled: true
+              type: http
+              path: /ping
+              port: "{{ .Values.service.machinelearning.ports.machinelearning.port }}"
+  microservices:
+    enabled: true
+    type: Deployment
+    podSpec:
+      initContainers:
+        wait-server:
+          enabled: true
+          type: init
+          imageSelector: alpineImage
+          resources:
+            excludeExtra: true
+          command:
+            - /bin/ash
+            - -c
+            - |-
+              {{ tpl .Values.waitServerScript $ | trim }}
+      containers:
+        microservices:
+          enabled: true
+          primary: true
+          imageSelector: image
+          securityContext:
+            capabilities:
+              disableS6Caps: true
+          env:
+            IMMICH_MACHINE_LEARNING_ENABLED: "{{ .Values.immich.enable_ml }}"
+            IMMICH_MACHINE_LEARNING_URL: >-
+              {{- if .Values.immich.enable_ml -}}
+                {{- printf "http://%s-machinelearning:%v" (include "tc.v1.common.lib.chart.names.fullname" .) .Values.service.machinelearning.ports.machinelearning.port -}}
+              {{- else -}}
+                false
+              {{- end -}}
+            NODE_ENV: production
+            IMMICH_PORT: "{{ .Values.service.microservices.ports.microservices.port }}"
+            REVERSE_GEOCODING_DUMP_DIRECTORY: "{{ .Values.persistence.microcache.targetSelector.microservices.microservices.mountPath }}"
+            IMMICH_WORKERS_EXCLUDE: api
+            DB_USERNAME: "{{ .Values.cnpg.main.user }}"
+            DB_DATABASE_NAME: "{{ .Values.cnpg.main.database }}"
+            DB_HOSTNAME: "{{ .Values.cnpg.main.creds.host }}"
+            DB_PASSWORD: "{{ .Values.cnpg.main.creds.password }}"
+            DB_PORT: "5432"
+            REDIS_HOSTNAME: '{{ .Values.redis.creds.plainhost | trimAll "\"" }}'
+            REDIS_PASSWORD: '{{ .Values.redis.creds.redisPassword | trimAll "\"" }}'
+            REDIS_PORT: "6379"
+            REDIS_DBINDEX: "0"
+          probes:
+            readiness:
+              enabled: true
+              type: exec
+              command: immich-healthcheck
+            liveness:
+              enabled: true
+              type: exec
+              command: immich-healthcheck
+            startup:
+              enabled: true
+              type: exec
+              command: immich-healthcheck
 service:
   main:
     # Main service targets the server
@@ -56,7 +207,7 @@ service:
         protocol: http
         targetSelector: microservices
   machinelearning:
-    enabled: true
+    enabled: "{{ .Values.immich.enable_ml }}"
     type: ClusterIP
     targetSelector: machinelearning
     ports:
@@ -69,7 +220,7 @@ service:
 
 persistence:
   mlcache:
-    enabled: true
+    enabled: "{{ .Values.immich.enable_ml }}"
     type: emptyDir
     targetSelector:
       machinelearning:
@@ -142,17 +293,13 @@ cnpg:
     enabled: true
     user: immich
     database: immich
-    type: vectors
+    type: vectorchord
     cluster:
       initdb:
         postInitApplicationSQL:
+          - ALTER USER immich WITH SUPERUSER;
           - CREATE EXTENSION IF NOT EXISTS cube;
           - CREATE EXTENSION IF NOT EXISTS earthdistance;
-          - CREATE SCHEMA IF NOT EXISTS vectors;
-          - ALTER DATABASE immich SET search_path TO "immich", public, vectors;
-          - SET search_path TO "immich", public, vectors;
-          - GRANT SELECT ON TABLE pg_vector_index_stat TO PUBLIC;
-          - ALTER SCHEMA vectors OWNER TO immich;
 
 redis:
   enabled: true
@@ -164,3 +311,12 @@ ingress:
       homepage:
         widget:
           version: 2
+
+waitServerScript: |
+  {{- $url := printf "http://%v:%v/api/server/ping" (include "tc.v1.common.lib.chart.names.fullname" .) .Values.service.main.ports.main.port -}}
+  echo "Pinging [{{ $url }}] until it is ready..."
+  until wget --spider --quiet --timeout=3 --tries 1 "{{ $url }}"; do
+    echo "Waiting for [{{ $url }}] to be ready..."
+    sleep 2
+  done
+  echo "URL [{{ $url }}] is ready!"

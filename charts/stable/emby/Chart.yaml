@@ -11,10 +11,10 @@ annotations:
   truecharts.org/min_kubernetes_version: 1.24.0
   truecharts.org/train: stable
 apiVersion: v2
-appVersion: 4.9.1.36
+appVersion: 4.9.2.6
 dependencies:
   - name: common
-    version: 28.21.1
+    version: 28.26.3
     repository: oci://oci.trueforge.org/truecharts
     condition: ""
     alias: ""
@@ -35,11 +35,9 @@ maintainers:
     url: https://truecharts.org
 name: emby
 sources:
-  - https://ghcr.io/home-operations/emby
   - https://github.com/linuxserver/docker-emby.git
-  - https://github.com/truecharts/charts/tree/master/charts/stable/emby
   - https://github.com/trueforge-org/truecharts/tree/master/charts/stable/emby
   - https://hub.docker.com/r/alpine/socat
 type: application
-version: 25.6.2
+version: 26.0.0
 

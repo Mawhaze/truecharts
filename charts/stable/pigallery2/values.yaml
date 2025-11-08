@@ -1,7 +1,7 @@
 image:
   pullPolicy: IfNotPresent
   repository: docker.io/bpatrik/pigallery2
-  tag: latest@sha256:317a50a5d1b81ad3469ac534c39e4c8022b13b8e504a30bc279716ceabed1e1f
+  tag: latest@sha256:17164d44b50b9528cb50fce66418d191993073befc2aaa2f2a7eea72b0c3370e
 persistence:
   config:
     enabled: true

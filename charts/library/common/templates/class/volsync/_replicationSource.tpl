@@ -50,13 +50,13 @@ metadata:
 spec:
   sourcePVC: {{ $objectData.name }}
   trigger:
-    schedule: {{ $schedule }}
+    schedule: {{ $schedule | quote }}
   {{ $volsyncData.type }}:
     repository: {{ $volsyncData.repository }}
     {{- if $volsyncData.customCA }}
     customCA:
-      secretName: {{ $volsyncData.customCA }}
-      key: ca.crt
+      secretName: {{ $volsyncData.customCA.name }}
+      key: {{ $volsyncData.customCA.key }}
     {{- end }}
     copyMethod: {{ $volsyncData.copyMethod | default "Snapshot" }}
     pruneIntervalDays: {{ $volsyncData.src.pruneIntervalDays | default 7 }}
